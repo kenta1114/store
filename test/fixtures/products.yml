@@ -1,0 +1,20 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+
+two:
+  name: MyString
+
+tshirt:
+  name: "Basic T-Shirt"
+  price: 29.99
+  stock: 0
+  description: "Comfortable cotton t-shirt"
+  # 他に必要なカラムがあれば追加
+
+another_product:
+  name: "Another Product"
+  price: 19.99
+  stock: 5
+  description: "Another test product"

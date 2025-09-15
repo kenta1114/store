@@ -4,6 +4,33 @@ class ProductsController < ApplicationController
 
   def index
     @products = Product.all
+    @categories = Product.distinct.pluck(:category).compact
+    
+    # 検索機能
+    if params[:search].present?
+      @products = @products.where("name ILIKE ? OR description ILIKE ?", 
+                                 "%#{params[:search]}%", "%#{params[:search]}%")
+    end
+    
+    # カテゴリフィルタ
+    if params[:category].present?
+      @products = @products.where(category: params[:category])
+    end
+    
+    # 価格ソート
+    case params[:sort]
+    when 'price_asc'
+      @products = @products.order(:price)
+    when 'price_desc'
+      @products = @products.order(price: :desc)
+    when 'name_asc'
+      @products = @products.order(:name)
+    else
+      @products = @products.order(created_at: :desc)
+    end
+    
+    # ページネーション（将来の拡張用）
+    @products = @products.limit(12)
   end
 
   def show
@@ -44,6 +71,6 @@ class ProductsController < ApplicationController
     end
 
     def product_params
-      params.expect(product: [ :name, :description, :featured_image, :inventory_count ])
+      params.expect(product: [ :name, :description, :featured_image, :inventory_count, :price, :category ])
     end
 end

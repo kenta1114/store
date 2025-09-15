@@ -17,8 +17,8 @@ class ApplicationController < ActionController::Base
     if authenticated?
       @current_cart = Current.user.current_cart
     else
-      session_id = session.id || session[:session_id] ||= SecureRandom.hex
-      @current_cart = Cart.find_or_create_by(session_id: session_id)
+      session[:cart_session_id] ||= SecureRandom.hex
+      @current_cart = Cart.find_or_create_by(session_id: session[:cart_session_id])
     end
   end
 end

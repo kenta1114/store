@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
     
     # 検索機能
     if params[:search].present?
-      @products = @products.where("name ILIKE ? OR description ILIKE ?", 
+      @products = @products.where("name LIKE ? OR description LIKE ?", 
                                  "%#{params[:search]}%", "%#{params[:search]}%")
     end
     

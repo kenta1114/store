@@ -1,8 +1,11 @@
-<%= form_with model: @product, local: true, class: "needs-validation", novalidate: true do |form| %>
+<%= form_with model: @product, local: true, class: "space-y-6" do |form| %>
   <% if @product.errors.any? %>
-    <div class="alert alert-danger">
-      <h6><i class="fas fa-exclamation-triangle"></i> エラーがあります:</h6>
-      <ul class="mb-0">
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-center mb-2">
+        <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+        <h3 class="font-semibold text-red-800">エラーがあります:</h3>
+      </div>
+      <ul class="list-disc list-inside text-red-700 text-sm space-y-1">
         <% @product.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,21 +13,21 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="col-md-8">
-      <div class="mb-3">
-        <%= form.label :name, "商品名 *", class: "form-label" %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+      <div>
+        <%= form.label :name, "商品名 *", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.text_field :name, 
-            class: "form-control #{'is-invalid' if @product.errors[:name].any?}",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @product.errors[:name].any?}",
             placeholder: "商品名を入力してください",
             required: true %>
-        <div class="invalid-feedback">
-          <%= @product.errors[:name].first %>
-        </div>
+        <% if @product.errors[:name].any? %>
+          <p class="text-red-600 text-sm mt-1"><%= @product.errors[:name].first %></p>
+        <% end %>
       </div>
 
-      <div class="mb-3">
-        <%= form.label :category, "カテゴリ *", class: "form-label" %>
+      <div>
+        <%= form.label :category, "カテゴリ *", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.select :category,
             options_for_select([
               ['エレクトロニクス', 'エレクトロニクス'],
@@ -36,86 +39,81 @@
               ['その他', 'その他']
             ], @product.category),
             { prompt: 'カテゴリを選択してください' },
-            { class: "form-select #{'is-invalid' if @product.errors[:category].any?}", required: true } %>
-        <div class="invalid-feedback">
-          <%= @product.errors[:category].first %>
-        </div>
+            { class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @product.errors[:category].any?}", required: true } %>
+        <% if @product.errors[:category].any? %>
+          <p class="text-red-600 text-sm mt-1"><%= @product.errors[:category].first %></p>
+        <% end %>
       </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :price, "価格 (円) *", class: "form-label" %>
-            <div class="input-group">
-              <span class="input-group-text">¥</span>
-              <%= form.number_field :price,
-                  class: "form-control #{'is-invalid' if @product.errors[:price].any?}",
-                  placeholder: "0",
-                  min: 1,
-                  step: 1,
-                  required: true %>
-              <div class="invalid-feedback">
-                <%= @product.errors[:price].first %>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :inventory_count, "在庫数 *", class: "form-label" %>
-            <%= form.number_field :inventory_count,
-                class: "form-control #{'is-invalid' if @product.errors[:inventory_count].any?}",
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= form.label :price, "価格 (円) *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-gray-500">¥</span>
+            <%= form.number_field :price,
+                class: "w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @product.errors[:price].any?}",
                 placeholder: "0",
-                min: 0,
+                min: 1,
+                step: 1,
                 required: true %>
-            <div class="invalid-feedback">
-              <%= @product.errors[:inventory_count].first %>
-            </div>
           </div>
+          <% if @product.errors[:price].any? %>
+            <p class="text-red-600 text-sm mt-1"><%= @product.errors[:price].first %></p>
+          <% end %>
+        </div>
+
+        <div>
+          <%= form.label :inventory_count, "在庫数 *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.number_field :inventory_count,
+              class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @product.errors[:inventory_count].any?}",
+              placeholder: "0",
+              min: 0,
+              required: true %>
+          <% if @product.errors[:inventory_count].any? %>
+            <p class="text-red-600 text-sm mt-1"><%= @product.errors[:inventory_count].first %></p>
+          <% end %>
         </div>
       </div>
 
-      <div class="mb-3">
-        <%= form.label :description, "商品説明", class: "form-label" %>
+      <div>
+        <%= form.label :description, "商品説明", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.rich_text_area :description, 
-            class: "form-control",
+            class: "w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
             placeholder: "商品の詳細な説明を入力してください" %>
-        <div class="form-text">商品の特徴、仕様、使用方法などを詳しく記載してください。</div>
+        <p class="text-gray-500 text-sm mt-2">商品の特徴、仕様、使用方法などを詳しく記載してください。</p>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= form.label :featured_image, "商品画像", class: "form-label" %>
+    <div class="space-y-6">
+      <div>
+        <%= form.label :featured_image, "商品画像", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.file_field :featured_image, 
             accept: "image/*",
-            class: "form-control #{'is-invalid' if @product.errors[:featured_image].any?}" %>
-        <div class="form-text">JPG、PNG、GIF形式の画像ファイルをアップロードしてください。</div>
-        <div class="invalid-feedback">
-          <%= @product.errors[:featured_image].first %>
-        </div>
+            class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @product.errors[:featured_image].any?}" %>
+        <p class="text-gray-500 text-sm mt-2">JPG、PNG、GIF形式の画像ファイルをアップロードしてください。</p>
+        <% if @product.errors[:featured_image].any? %>
+          <p class="text-red-600 text-sm mt-1"><%= @product.errors[:featured_image].first %></p>
+        <% end %>
       </div>
 
       <% if @product.featured_image.attached? %>
-        <div class="mb-3">
-          <label class="form-label">現在の画像</label>
-          <div class="border rounded p-2">
-            <%= image_tag @product.featured_image, class: "img-fluid rounded" %>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">現在の画像</label>
+          <div class="border border-gray-300 rounded-lg p-3 bg-gray-50">
+            <%= image_tag @product.featured_image, class: "w-full rounded-lg" %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
 
-  <div class="d-flex justify-content-between">
-    <%= link_to products_path, class: "btn btn-secondary" do %>
-      <i class="fas fa-arrow-left"></i> キャンセル
+  <div class="flex justify-between pt-6 border-t border-gray-200">
+    <%= link_to products_path, 
+         class: "inline-flex items-center bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium transition-colors" do %>
+      <i class="fas fa-arrow-left mr-2"></i>キャンセル
     <% end %>
     
     <%= form.submit @product.new_record? ? "商品を作成" : "商品を更新", 
-        class: "btn btn-primary" do %>
-      <i class="fas fa-save"></i> <%= @product.new_record? ? "商品を作成" : "商品を更新" %>
-    <% end %>
+         class: "inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors" %>
   </div>
 <% end %>

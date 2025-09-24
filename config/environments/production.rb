@@ -96,5 +96,12 @@ Rails.application.configure do
   config.hosts << "store-0g8c.onrender.com"
   
   # Configure secret_key_base from environment variable
-  config.secret_key_base = ENV['SECRET_KEY_BASE']
+  # Allow Docker build stage to use SECRET_KEY_BASE_DUMMY for assets:precompile
+  secret_key = ENV["SECRET_KEY_BASE"].presence || ENV["SECRET_KEY_BASE_DUMMY"].presence
+  if secret_key.present?
+    config.secret_key_base = secret_key
+  else
+    # Keep default Rails behavior (will raise a helpful error) if nothing is provided at runtime
+    # This ensures we don't silently boot without a proper secret in production.
+  end
 end

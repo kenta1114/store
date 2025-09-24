@@ -5,11 +5,21 @@ set -o errexit  # Exit on error
 
 echo "Starting Render build process..."
 
-# Install dependencies
+# Set environment variables for production
+export DISABLE_DEBUG=1
+export RAILS_ENV=production
+
+# Generate a secret key if not provided
+if [ -z "$SECRET_KEY_BASE" ]; then
+  export SECRET_KEY_BASE=$(openssl rand -hex 64)
+  echo "Generated SECRET_KEY_BASE for build process"
+fi
+
+# Install Ruby gems
 echo "Installing Ruby gems..."
-bundle config --local deployment 'true'
-bundle config --local path './vendor/bundle'
-bundle install --without development test
+bundle config set --local deployment 'true'
+bundle config set --local without 'development test'
+bundle install
 
 # Clean up bundle cache
 echo "Cleaning bundle cache..."

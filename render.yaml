@@ -1,0 +1,23 @@
+# render.yaml
+# Render deployment configuration file
+
+services:
+  - type: web
+    name: store-app
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb -p $PORT"
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: BUNDLE_WITHOUT
+        value: "development:test"
+
+databases:
+  - name: store-db
+    plan: free # or starter for production
+    region: oregon # or your preferred region
